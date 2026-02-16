@@ -1,3 +1,29 @@
+import re
+from datetime import date
+from accounts import Account
+
+class Bank:
+    def __init__(self):
+        self.accounts = []
+
+    def find_account(self, account_number, password):
+        for acc in self.accounts:
+            if acc.account_number == account_number and acc.validate_password(password):
+                return acc
+        return None
+
+    def create_account(self, name, pan, birth_date, password, initial_balance):
+        if birth_date > date(date.today().year - 18, date.today().month, date.today().day):
+            print("Must be 18+ years old")
+            return None
+
+        if not self.is_valid_pan(pan):
+            print("Invalid PAN format (ABCDE1234F)")
+            return None
+
+        new_account = Account(name, pan, birth_date, password, initial_balance)
+        self.accounts.append(new_account)
+        print(f"Account created: {new_account.account_number}")
         return new_account
 
     def transfer(self, from_acc_num, from_pass, to_acc_num, amount):
